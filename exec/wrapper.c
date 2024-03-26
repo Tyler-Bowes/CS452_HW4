@@ -36,12 +36,11 @@ static wrapperRep wrapper_new(int max) {
   return rep;
 }
 
-wrapper_free(wrapperRep rep) {
+static void wrapper_free(wrapperRep rep) {
   pthread_mutex_destroy(&rep->lock);
   pthread_cond_destroy(&rep->put);
   pthread_cond_destroy(&rep->get);
-  deq_free(rep->r);
-  // deq_del(rep->r, 0);
+  deq_del(rep->r, 0);
   free(rep);
 }
 
@@ -50,7 +49,7 @@ static void wrapper_put(wrapperRep rep, Data mole, End end) {
   // put a mole on the lawn if lawn is not full
 
   pthread_mutex_lock(&rep->lock);
-  while (deq_len(rep->r) == 10) {
+  while (deq_len(rep->r) == rep->max) {
     pthread_cond_wait(&rep->put, &rep->lock);
   }
   deq_put(rep->r, end, mole);

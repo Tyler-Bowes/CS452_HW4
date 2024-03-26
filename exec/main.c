@@ -31,6 +31,9 @@ int main() {
   Lawn lawn=lawn_new(0,0);
   Deq q=deq_new(); // create a new queue
   void *arg[2]={q,lawn};
+
+  wrapperRep wrapper = wrapper_new(10);
+
   // need to create produce_thr and consume_thr variables to hold the threads
   pthread_t *produce_thr = create_thread(produce, arg, n);
   pthread_t *consume_thr = create_thread(consume, arg, n);
