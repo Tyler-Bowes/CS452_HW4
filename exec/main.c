@@ -14,13 +14,13 @@ static void *produce(void *a) {
   void **arg=a;
   wrapperRep q=(wrapperRep)arg[0];
   Lawn l=(Lawn)arg[1];
-  wrapper_put(q,mole_new(l,0,0), Tail);
+  wrapper_put(q,mole_new(l,0,0));
   return 0;
 }
 static void *consume(void *a) { 
   void **arg=a;
   wrapperRep q=(wrapperRep)arg[0];
-  Mole m=wrapper_get(q,Head);
+  Mole m=wrapper_get(q);
   mole_whack(m);
   return 0;
 }
@@ -31,6 +31,7 @@ int main() {
   Lawn lawn=lawn_new(0,0);
 
   wrapperRep mtq = wrapper_new(10);
+
   void *arg[2]={mtq,lawn};
 
   // need to create produce_thr and consume_thr variables to hold the threads

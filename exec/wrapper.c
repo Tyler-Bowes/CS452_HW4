@@ -9,8 +9,6 @@
 // static void put(Rep r, End e, Data d) {
 // static Data get(Rep r, End e)         { 
 
-typedef enum {Head,Tail,Ends} End;
-
 typedef struct {
   pthread_mutex_t lock;
   pthread_cond_t put;
@@ -45,28 +43,28 @@ static void wrapper_free(wrapperRep rep) {
 }
 
 
-static void wrapper_put(wrapperRep rep, Data mole, End end) {
+static void wrapper_put(wrapperRep rep, Data mole) {
   // put a mole on the lawn if lawn is not full
 
   pthread_mutex_lock(&rep->lock);
   while (deq_len(rep->r) == rep->max) {
     pthread_cond_wait(&rep->put, &rep->lock);
   }
-  put(rep->r, end, mole);
+  deq_tail_put(rep->r, mole);
   pthread_cond_signal(&rep->get); // signal that the lawn is not empty
   pthread_mutex_unlock(&rep->lock);
 }
 
 // pthread_cond_init(&decrable,0);
 
-static Data wrapper_get(wrapperRep rep, End end) {
+static Data wrapper_get(wrapperRep rep) {
   // get a mole from the lawn if lawn is not empty
   
   pthread_mutex_lock(&rep->lock);  
   while (deq_len(rep->r) == 0) {
     pthread_cond_wait(&rep->get, &rep->lock);
   }
-  Data mole = get(rep->r, end); // the end can be a random call?
+  Data mole = deq_head_get(rep->r); // the end can be a random call?
   pthread_cond_signal(&rep->put); // signal that the lawn is not full
   pthread_mutex_unlock(&rep->lock);
   return mole;

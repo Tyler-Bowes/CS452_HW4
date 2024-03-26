@@ -3,14 +3,13 @@
 
 #include "deq.h"
 
-typedef enum {Head,Tail,Ends} End;
-typedef struct {/*...*/} *wrapperRep;
+typedef struct {} *wrapperRep;
 typedef void* Data;
 
 // Function declarations
 extern wrapperRep wrapper_new(int max);
 extern void wrapper_free(wrapperRep rep);
-extern void wrapper_put(wrapperRep rep, Data mole, End end);
-extern Data wrapper_get(wrapperRep rep, End end);
+extern void wrapper_put(wrapperRep rep, Data mole);
+extern Data wrapper_get(wrapperRep rep);
 
 #endif
