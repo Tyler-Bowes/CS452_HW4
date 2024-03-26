@@ -52,7 +52,7 @@ static void wrapper_put(wrapperRep rep, Data mole, End end) {
   while (deq_len(rep->r) == rep->max) {
     pthread_cond_wait(&rep->put, &rep->lock);
   }
-  deq_put(rep->r, end, mole);
+  put(rep->r, end, mole);
   pthread_cond_signal(&rep->get); // signal that the lawn is not empty
   pthread_mutex_unlock(&rep->lock);
 }
@@ -66,7 +66,7 @@ static Data wrapper_get(wrapperRep rep, End end) {
   while (deq_len(rep->r) == 0) {
     pthread_cond_wait(&rep->get, &rep->lock);
   }
-  Data mole = deq_get(rep->r, end); // the end can be a random call?
+  Data mole = get(rep->r, end); // the end can be a random call?
   pthread_cond_signal(&rep->put); // signal that the lawn is not full
   pthread_mutex_unlock(&rep->lock);
   return mole;
