@@ -20,7 +20,7 @@ typedef struct {
 //create function to create
 // new put delete and free
 
-static wrapperRep wrapper_new(int max) {
+wrapperRep wrapper_new(int max) {
   wrapperRep rep = malloc(sizeof(*rep));
   // if (rep == NULL) {
   //   error_sys("malloc error");
@@ -34,7 +34,7 @@ static wrapperRep wrapper_new(int max) {
   return rep;
 }
 
-static void wrapper_free(wrapperRep rep) {
+void wrapper_free(wrapperRep rep) {
   pthread_mutex_destroy(&rep->lock);
   pthread_cond_destroy(&rep->put);
   pthread_cond_destroy(&rep->get);
@@ -43,7 +43,7 @@ static void wrapper_free(wrapperRep rep) {
 }
 
 
-static void wrapper_put(wrapperRep rep, Data mole) {
+void wrapper_put(wrapperRep rep, Data mole) {
   // put a mole on the lawn if lawn is not full
 
   pthread_mutex_lock(&rep->lock);
@@ -57,7 +57,7 @@ static void wrapper_put(wrapperRep rep, Data mole) {
 
 // pthread_cond_init(&decrable,0);
 
-static Data wrapper_get(wrapperRep rep) {
+Data wrapper_get(wrapperRep rep) {
   // get a mole from the lawn if lawn is not empty
   
   pthread_mutex_lock(&rep->lock);  
