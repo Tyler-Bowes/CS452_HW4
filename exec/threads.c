@@ -2,6 +2,9 @@
 #include <unistd.h>
 #include <pthread.h>
 
+
+
+
 // ptherad_create();
 // will have to add dec and write thread wrapper around each function.
 // creating a thread for producing and concumming the mole
@@ -18,7 +21,7 @@ pthread_t * create_thread(void* (*start_routine)(void*), void* arg, int Num) {
     return tids;
 }
 
-void consume(pthread_t *tids, int Num) {
+void consume_thread(pthread_t *tids, int Num) {
     for (int i=0; i<Num; i++){
         pthread_join(tids[i],0);
     }

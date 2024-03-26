@@ -5,7 +5,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-int min = 0;
 int max = 10;
 current = 0;
 
@@ -24,19 +23,33 @@ typedef struct {
 
 //create function to create
 
-static void put(wrapperRep rep, Data mole, End end) {
-
+static void wrapper_put(wrapperRep rep, Data mole, End end) {
+  pthread_mutex_lock(&rep->lock); // lock the mutex
+  while (current == max) { // # of moles is at the max for the deq
+      pthread_cond_wait(&rep->put, &rep->lock); 
+  }
+  // put the mole in the lawn
+  Deq q = (Deq)rep->r;
+  put(q, mole, end); // put the mole in the lawn
+  current++; 
+  
+  pthread_cond_signal(&rep->get); 
+  pthread_mutex_unlock(&rep->lock); 
 }
 
-pthread_cond_init(&decrable,0);
+// pthread_cond_init(&decrable,0);
 
-
-if (current == min) {
-    pthread_mutex_lock(&lock);
-
-    pthread_mutex_unlock(&lock);
-} else if (current == max) {
-    pthread_mutex_lock(&lock);
-
-    pthread_mutex_unlock(&lock);
+static Data wrapper_get(wrapperRep rep, End end) {
+  pthread_mutex_lock(&rep->lock); 
+  while (current <= 0) { // # of moles is at 0 so cannot take out a mole
+      pthread_cond_wait(&rep->get, &rep->lock); 
+  }
+  // get the mole from the lawn
+  Deq q = (Deq)rep->r;
+  Data mole = get(q, end); 
+  current--;
+  pthread_cond_signal(&rep->put); // signal the condition
+  pthread_mutex_unlock(&rep->lock); // unlock the mutex
 }
+
+
