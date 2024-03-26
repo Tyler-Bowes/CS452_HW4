@@ -27,19 +27,9 @@ static wrapperRep wrapper_new(int max) {
   // if (rep == NULL) {
   //   error_sys("malloc error");
   // }
-  
-  if (pthread_mutex_init(&rep->lock, NULL) != 0) {
-    error_sys("mutex init error");
-  }
-  
-  if (pthread_cond_init(&rep->put, NULL) != 0) {
-    error_sys("condition variable init error");
-  }
-  
-  if (pthread_cond_init(&rep->get, NULL) != 0) {
-    error_sys("condition variable init error");
-  }
-  
+  pthread_mutex_init(&rep->lock, NULL);
+  pthread_cond_init(&rep->put, NULL);
+  pthread_cond_init(&rep->get, NULL);
   rep->max = max;
   rep->r = deq_new();
   
@@ -51,6 +41,7 @@ wrapper_free(wrapperRep rep) {
   pthread_cond_destroy(&rep->put);
   pthread_cond_destroy(&rep->get);
   deq_free(rep->r);
+  // deq_del(rep->r, 0);
   free(rep);
 }
 
