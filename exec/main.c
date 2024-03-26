@@ -10,8 +10,6 @@
 #include "wrapper.h"
 #include "threads.h"
  
-typedef enum {Head,Tail,Ends} End;
-
 static void *produce(void *a) { 
   void **arg=a;
   Deq q=(Deq)arg[0];
@@ -23,7 +21,9 @@ static void *consume(void *a) {
   void **arg=a;
   Deq q=(Deq)arg[0];
   Mole m=wrapper_get(q,Head);
-  mole_whack(m);  
+  mole_whack(m);
+  mole_free(m);
+  return 0;
   }
 
 int main() {
