@@ -22,7 +22,6 @@ static void *consume(void *a) {
   Deq q=(Deq)arg[0];
   Mole m=wrapper_get(q,Head);
   mole_whack(m);
-  mole_free(m);
   return 0;
   }
 
