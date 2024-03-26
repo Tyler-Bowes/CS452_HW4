@@ -12,27 +12,26 @@
  
 static void *produce(void *a) { 
   void **arg=a;
-  Deq q=(Deq)arg[0];
+  wrapperRep q=(wrapperRep)arg[0];
   Lawn l=(Lawn)arg[1];
   wrapper_put(q,mole_new(l,0,0), Tail);
   return 0;
 }
 static void *consume(void *a) { 
   void **arg=a;
-  Deq q=(Deq)arg[0];
+  wrapperRep q=(wrapperRep)arg[0];
   Mole m=wrapper_get(q,Head);
   mole_whack(m);
   return 0;
-  }
+}
 
 int main() {
   srandom(time(0));
   const int n=10;
   Lawn lawn=lawn_new(0,0);
-  Deq q=deq_new(); // create a new queue
-  void *arg[2]={q,lawn};
 
-  wrapperRep wrapper = wrapper_new(10);
+  wrapperRep mtq = wrapper_new(10);
+  void *arg[2]={mtq,lawn};
 
   // need to create produce_thr and consume_thr variables to hold the threads
   pthread_t *produce_thr = create_thread(produce, arg, n);
@@ -42,7 +41,7 @@ int main() {
   consume_thread(produce_thr, n);
   consume_thread(consume_thr, n);
   
-  wrapper_free(q);
+  wrapper_free(mtq);
   lawn_free(lawn);
 
   // for (int i=1; i<=n; i++)
