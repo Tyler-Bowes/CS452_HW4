@@ -8,9 +8,9 @@ typedef struct {/*...*/} *wrapperRep;
 typedef void* Data;
 
 // Function declarations
-wrapperRep wrapper_new(int max);
-void wrapper_free(wrapperRep rep);
-void wrapper_put(wrapperRep rep, Data mole, End end);
-Data wrapper_get(wrapperRep rep, End end);
+extern wrapperRep wrapper_new(int max);
+extern void wrapper_free(wrapperRep rep);
+extern void wrapper_put(wrapperRep rep, Data mole, End end);
+extern Data wrapper_get(wrapperRep rep, End end);
 
 #endif
