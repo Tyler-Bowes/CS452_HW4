@@ -6,9 +6,6 @@
 #include <string.h>
 #include "error.h"
 
-// static void put(Rep r, End e, Data d) {
-// static Data get(Rep r, End e)         { 
-
 typedef struct {
   pthread_mutex_t lock;
   pthread_cond_t put;
@@ -17,14 +14,9 @@ typedef struct {
   void* r;
 } *wrapperRep;
 
-//create function to create
-// new put delete and free
-
+// create and initilize the type
 wrapperRep wrapper_new(int max) {
   wrapperRep rep = malloc(sizeof(*rep));
-  // if (rep == NULL) {
-  //   error_sys("malloc error");
-  // }
   pthread_mutex_init(&rep->lock, NULL);
   pthread_cond_init(&rep->put, NULL);
   pthread_cond_init(&rep->get, NULL);
@@ -34,6 +26,7 @@ wrapperRep wrapper_new(int max) {
   return rep;
 }
 
+// free the struct and thread stuff
 void wrapper_free(wrapperRep rep) {
   pthread_mutex_destroy(&rep->lock);
   pthread_cond_destroy(&rep->put);
@@ -42,10 +35,9 @@ void wrapper_free(wrapperRep rep) {
   free(rep);
 }
 
-
+// add a mole to the lawn in a thread safe way
 void wrapper_put(wrapperRep rep, Data mole) {
   // put a mole on the lawn if lawn is not full
-
   pthread_mutex_lock(&rep->lock);
   while (deq_len(rep->r) == rep->max) {
     pthread_cond_wait(&rep->put, &rep->lock);
@@ -55,17 +47,15 @@ void wrapper_put(wrapperRep rep, Data mole) {
   pthread_mutex_unlock(&rep->lock);
 }
 
-// pthread_cond_init(&decrable,0);
-
+// get a mole from the lawn in a thread safe way
 Data wrapper_get(wrapperRep rep) {
   // get a mole from the lawn if lawn is not empty
-  
   pthread_mutex_lock(&rep->lock);  
   while (deq_len(rep->r) == 0) {
     pthread_cond_wait(&rep->get, &rep->lock);
   }
-  Data mole = deq_head_get(rep->r); // the end can be a random call?
-  pthread_cond_signal(&rep->put); // signal that the lawn is not full
+  Data mole = deq_head_get(rep->r);
+  pthread_cond_signal(&rep->put);
   pthread_mutex_unlock(&rep->lock);
   return mole;
 }

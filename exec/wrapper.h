@@ -3,7 +3,13 @@
 
 #include "deq.h"
 
-typedef struct {} *wrapperRep;
+typedef struct {
+    pthread_mutex_t lock;
+    pthread_cond_t put;
+    pthread_cond_t get;
+    int max;
+    void* r;
+} *wrapperRep;
 typedef void* Data;
 
 // Function declarations
