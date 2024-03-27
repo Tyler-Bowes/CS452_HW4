@@ -10,7 +10,7 @@ typedef struct {
   pthread_mutex_t lock;
   pthread_cond_t put;
   pthread_cond_t get;
-  int max; // hard coded to 10
+  int max;
   void* r;
 } *wrapperRep;
 
